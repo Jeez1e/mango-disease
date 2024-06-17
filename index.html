@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mango Disease Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .file-input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px 0;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+        }
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+        .filename {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .image-container, .result-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result-container h2 {
+            color: #333;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            const fileInput = document.querySelector('input[type="file"]');
+            const fileLabel = document.querySelector('.file-label');
+            const filename = document.querySelector('.filename');
+
+            fileLabel.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default label behavior
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(){
+                const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'No file chosen';
+                filename.textContent = fileName;
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Mango Disease Detection</h1>
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <div class="file-input-container">
+                <label class="file-label" for="file-input">Choose File</label>
+                <input type="file" name="file" id="file-input" required>
+                <span class="filename">No file chosen</span>
+            </div>
+            <button type="submit">Upload and Predict</button>
+        </form>
+        {% if filename %}
+            <div class="image-container">
+                <h2>Uploaded Image:</h2>
+                <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image">
+            </div>
+            <div class="result-container">
+                <h2>Prediction: {{ prediction }}</h2>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
